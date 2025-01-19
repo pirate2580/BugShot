@@ -1,24 +1,31 @@
 import cv2
 from ultralytics import YOLO
 
-# TODO: try wrapping function with modal
-import modal
+# # TODO: try wrapping function with modal
+# import modal
 
-app = modal.App()
-image = (
-    modal.Image.debian_slim(python_version="3.10")
-    .apt_install(  # install system libraries for graphics handling
-        ["libgl1-mesa-glx", "libglib2.0-0"]
-    )
-    .pip_install(  # install python libraries for computer vision
-        ["ultralytics~=8.2.68", "roboflow~=1.1.37", "opencv-python~=4.10.0"]
-    )
-    .pip_install(  # add an optional extra that renders images in the terminal
-        "term-image==0.7.1"
-    )
-)
+# app = modal.App()
+# image = (
+#     modal.Image.debian_slim(python_version="3.10")
+#     .apt_install(  # install system libraries for graphics handling
+#         ["libgl1-mesa-glx", "libglib2.0-0"]
+#     )
+#     .pip_install(  # install python libraries for computer vision
+#         ["ultralytics~=8.2.68", "roboflow~=1.1.37", "opencv-python~=4.10.0"]
+#     )
+#     .pip_install(  # add an optional extra that renders images in the terminal
+#         "term-image==0.7.1"
+#     )
+# )
 
-@app.function(gpu="A100", image=image)
+# # Create a mount for the local model file
+# model_mount = modal.Mount.from_local_file(
+#     local_path="model.pt",  # Update this path
+#     remote_path="/root/model.pt"
+# )
+
+
+# @app.function(gpu="A100", image=image, mounts=[model_mount])
 def infer_from_webcam(model_path):
     """
     Performs inference using a YOLOv8 model from a webcam feed.
@@ -68,3 +75,9 @@ def infer_from_webcam(model_path):
 
 if __name__ == "__main__":
     infer_from_webcam("model.pt")
+
+# @app.local_entrypoint()
+# def main():
+    # infer_from_webcam("model.pt")
+    # infer_from_webcam.remote("model.pt")
+    # infer_from_webcam.remote("/root/model.pt")

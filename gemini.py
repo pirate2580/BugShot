@@ -130,19 +130,6 @@ def gemini_narrate():
 
     images.append(prompt)
 
-    # response = model.generate_content([
-    # {'mime_type': 'image/jpeg', 'data': base64.b64encode(image_1.content).decode('utf-8')},
-    # {'mime_type': 'image/jpeg', 'data': base64.b64encode(image_2.content).decode('utf-8')},
-    # {'mime_type': 'image/jpeg', 'data': base64.b64encode(image_3.content).decode('utf-8')},
-    # {'mime_type': 'image/jpeg', 'data': base64.b64encode(image_4.content).decode('utf-8')},
-    # {'mime_type': 'image/jpeg', 'data': base64.b64encode(image_5.content).decode('utf-8')},
-    # {'mime_type': 'image/jpeg', 'data': base64.b64encode(image_6.content).decode('utf-8')},
-    # {'mime_type': 'image/jpeg', 'data': base64.b64encode(image_7.content).decode('utf-8')},
-    # {'mime_type': 'image/jpeg', 'data': base64.b64encode(image_8.content).decode('utf-8')},
-    # {'mime_type': 'image/jpeg', 'data': base64.b64encode(image_9.content).decode('utf-8')},
-    # {'mime_type': 'image/jpeg', 'data': base64.b64encode(image_10.content).decode('utf-8')},
-    # prompt
-    # ])
     response = model.generate_content(images)
     return response.text
 
@@ -153,7 +140,7 @@ if __name__ == "__main__":
   folder = "local_storage"
   delete_all_files(folder)
   capture_images(output_folder="local_storage", num_images=10, fps=1)
-#   print(gemini_narrate())
+
   text = gemini_narrate()
   engine = pyttsx3.init()
 
