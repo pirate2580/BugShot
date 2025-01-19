@@ -4,6 +4,12 @@ import math
 import struct
 import serial
 
+def map_range(value, input_min, input_max, output_min, output_max):
+    if(value < input_min):
+        value = input_min
+    if(value > input_max):
+        value = input_max
+    return (value - input_min) * (output_max - output_min) / (input_max - input_min) + output_min
 
 # @app.function(gpu="A100", image=image, mounts=[model_mount])
 def infer_from_webcam(model_path):
@@ -56,20 +62,21 @@ def infer_from_webcam(model_path):
         if baddest_bug:
             x = baddest_bug[0]
             y = baddest_bug[1]
-            print(baddest_bug, x, y)
-            pitch_send = (x-120)/410*60+60
-            yaw_send = 45-35*((y-90)/240)
+            #print(baddest_bug, x, y)
+            
+            pitch_send = map_range(y, 90, 330, 45, 30)
+            yaw_send = map_range(x, 120, 530, 60, 120)
             print(pitch_send, yaw_send)
-        
-            #data = struct.pack('BB', x, y)
-            # ser.write(data)
-            # ser.close()
+            data = struct.pack('BB', int(pitch_send), int(yaw_send))
+            print(data)
+            ser.write(data)
         
         # Press 'q' to exit
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
     
     # Release the webcam and close OpenCV windows
+    ser.close()
     cap.release()
     cv2.destroyAllWindows()
 
