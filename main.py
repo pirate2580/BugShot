@@ -2,6 +2,23 @@ import cv2
 from ultralytics import YOLO
 
 # TODO: try wrapping function with modal
+import modal
+
+app = modal.App()
+image = (
+    modal.Image.debian_slim(python_version="3.10")
+    .apt_install(  # install system libraries for graphics handling
+        ["libgl1-mesa-glx", "libglib2.0-0"]
+    )
+    .pip_install(  # install python libraries for computer vision
+        ["ultralytics~=8.2.68", "roboflow~=1.1.37", "opencv-python~=4.10.0"]
+    )
+    .pip_install(  # add an optional extra that renders images in the terminal
+        "term-image==0.7.1"
+    )
+)
+
+@app.function(gpu="A100", image=image)
 def infer_from_webcam(model_path):
     """
     Performs inference using a YOLOv8 model from a webcam feed.

@@ -3,3 +3,5 @@ ultralytics
 opencv-python
 google-generativeai
 httpx
+modal
+pyttsx3
