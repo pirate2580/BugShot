@@ -1,3 +1,5 @@
 opencv-python
 ultralytics
 opencv-python
+google-generativeai
+httpx

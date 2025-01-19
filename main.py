@@ -1,7 +1,7 @@
 import cv2
 from ultralytics import YOLO
 
-
+# TODO: try wrapping function with modal
 def infer_from_webcam(model_path):
     """
     Performs inference using a YOLOv8 model from a webcam feed.
@@ -32,7 +32,7 @@ def infer_from_webcam(model_path):
             break
         
         # Run inference on the current frame
-        results = model.predict(source=frame, conf=0.5, show=True)
+        results = model.predict(source=frame, conf=0.3, show=True)
         
         # Optionally, process results (e.g., extract bounding boxes or labels)
         for r in results:
@@ -51,23 +51,3 @@ def infer_from_webcam(model_path):
 
 if __name__ == "__main__":
     infer_from_webcam("model.pt")
-
-
-# cap = cv2.VideoCapture(0)  # 0 is the default camera
-
-# if not cap.isOpened():
-#     print("Error: Could not open webcam.")
-#     exit()
-
-# # Read frames from the webcam
-# while True:
-#     ret, frame = cap.read()
-#     if not ret:
-#         print("Error: Could not read frame.")
-#         break
-
-#     # Display the frame
-#     cv2.imshow("Webcam Feed", frame)
-
-# cap.release()
-# cv2.destroyAllWindows()
