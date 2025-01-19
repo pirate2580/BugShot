@@ -45,9 +45,3 @@ void loop() {
   delay(20);       //idle
   }
 }
-﻿
-Revan
-r3v4n_421
-𝓙υᖙᗩᔕ
-
-when in doubt, reduce everything to single variable calculus
