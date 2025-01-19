@@ -5,3 +5,5 @@ google-generativeai
 httpx
 modal
 pyttsx3
+serial
+pyserial

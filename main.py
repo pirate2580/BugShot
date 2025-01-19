@@ -1,28 +1,8 @@
 import cv2
 from ultralytics import YOLO
-
-# # TODO: try wrapping function with modal
-# import modal
-
-# app = modal.App()
-# image = (
-#     modal.Image.debian_slim(python_version="3.10")
-#     .apt_install(  # install system libraries for graphics handling
-#         ["libgl1-mesa-glx", "libglib2.0-0"]
-#     )
-#     .pip_install(  # install python libraries for computer vision
-#         ["ultralytics~=8.2.68", "roboflow~=1.1.37", "opencv-python~=4.10.0"]
-#     )
-#     .pip_install(  # add an optional extra that renders images in the terminal
-#         "term-image==0.7.1"
-#     )
-# )
-
-# # Create a mount for the local model file
-# model_mount = modal.Mount.from_local_file(
-#     local_path="model.pt",  # Update this path
-#     remote_path="/root/model.pt"
-# )
+import math
+import serial
+import struct
 
 
 # @app.function(gpu="A100", image=image, mounts=[model_mount])
@@ -32,6 +12,9 @@ def infer_from_webcam(model_path):
     
     Args:
         model_path (str): Path to the fine-tuned YOLOv8 model file.
+    Outputs:
+    -   (x, y, z coordinates)
+    Output Assumption: Assume the x
     """
     # Load the YOLOv8 model
     model = YOLO(model_path)
@@ -56,14 +39,20 @@ def infer_from_webcam(model_path):
             break
         
         # Run inference on the current frame
-        results = model.predict(source=frame, conf=0.3, show=True)
-        
-        # Optionally, process results (e.g., extract bounding boxes or labels)
-        for r in results:
-            boxes = r.boxes  # Get bounding boxes
-            print(f"Detected objects: {boxes.xyxy}, {boxes.conf}, {boxes.cls}")
-        
-        # Display the frame with predictions (already handled by `show=True`)
+        results = model.predict(source=frame, conf=0.6, show=True)
+
+        classes = results[0].boxes.cls.tolist()
+        pos = results[0].boxes.xywh.tolist()
+        # print(pos)
+        # ser = serial.Serial('COM6', 9600)  # Replace 'COM3' with your Arduino's port
+        # ser.timeout = 2  # Optional: timeout for read/write operations
+        if pos:
+            x = pos[0][0] - 640
+            y = pos[0][1] - 360
+            print(x, y)
+        # data = struct.pack('ff', x, y)
+        # ser.write(data)
+        # ser.close()
         
         # Press 'q' to exit
         if cv2.waitKey(1) & 0xFF == ord('q'):
@@ -73,11 +62,8 @@ def infer_from_webcam(model_path):
     cap.release()
     cv2.destroyAllWindows()
 
+
+
 if __name__ == "__main__":
     infer_from_webcam("model.pt")
 
-# @app.local_entrypoint()
-# def main():
-    # infer_from_webcam("model.pt")
-    # infer_from_webcam.remote("model.pt")
-    # infer_from_webcam.remote("/root/model.pt")
