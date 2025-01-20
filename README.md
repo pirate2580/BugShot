@@ -2,6 +2,8 @@
 1. git clone <repo-ssh>
 2. pip install -r requirements.txt
 3. python main.py
+
+\\ 
 **Demo Video: https://www.youtube.com/watch?v=aidoCaJGEwk**
 **Make sure that you have the Arduino board connected via the COM6 port on a Windows system, if on a Mac or Linux, manually change the port to whatever desired.**
 
